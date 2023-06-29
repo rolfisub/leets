@@ -1,0 +1,27 @@
+{
+  "name": "leet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolfisub/leet.git"
+  },
+  "author": "Rolf Bansbach",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rolfisub/leet/issues"
+  },
+  "homepage": "https://github.com/rolfisub/leet#readme"
+}
