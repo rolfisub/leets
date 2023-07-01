@@ -11,6 +11,7 @@ describe('merge sorted array', () => {
     merge(nums1, m, nums2, n);
     expect(nums1).toEqual(result);
   });
+
   it('case 4', () => {
     const nums1 = [
       -10, -10, -9, -9, -9, -8, -8, -7, -7, -7, -6, -6, -6, -6, -6, -6, -6, -5,
