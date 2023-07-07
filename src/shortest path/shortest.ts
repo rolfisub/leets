@@ -66,31 +66,65 @@ export function shortestPath(data: Data, from: string, to: string): string {
     );
   }
 
+  function getDistanceBetweenTwoNodes(
+    node1: string | number,
+    node2: string | number
+  ): number | null {
+    for (let conn in data) {
+      if (
+        (conn[0] === node1 || conn[1] === node1) &&
+        (conn[0] === node2 || conn[1] === node2)
+      ) {
+        return conn[2] as number;
+      }
+    }
+    return null;
+  }
+
+  function getTotalDistance(path: Array<string | number>): number {
+    let distance = 0;
+    for (let i = 0; i < path.length; i++) {
+      const node1 = path[i];
+      const node2 = path[i + 1] ?? null;
+      if (!node2) {
+        return distance;
+      }
+      distance += getDistanceBetweenTwoNodes(node1, node2) ?? 0;
+    }
+
+    return distance;
+  }
+
+  const paths: Array<Array<string | number>> = [];
   function traverseAllPaths(
     node: string,
     to: string,
-    visitedNodes: string[] = [],
-    result: Array<Array<Path[]>> = [],
-    currentPath: number = 0
-  ): Array<Array<Path[]>> {
+    visitedNodes: Array<string | number> = []
+  ): void {
+    visitedNodes.push(node);
     if (node === to) {
       return;
     }
-    visitedNodes.push(node);
-    console.log(node);
     const nodePaths = getNodePaths(node);
-    console.log(nodePaths);
     for (let i = 0; i < nodePaths.length; i++) {
       const newNode = nodePaths[i][1] as string;
-      console.log('newNode', newNode);
-      console.log('visitedNodes', visitedNodes);
       if (!visitedNodes.includes(newNode)) {
-        traverseAllPaths(newNode, to, visitedNodes, result, i);
+        const newVisited = [...visitedNodes, getTotalDistance(visitedNodes)];
+        paths.push(newVisited);
+        traverseAllPaths(newNode, to, newVisited);
       }
     }
+    return;
   }
 
   traverseAllPaths(from, to);
+
+  const validPaths = paths.filter((path, index, array) => {
+    const lastIndex = path.length - 1;
+    return path[lastIndex - 1] === to;
+  });
+
+  console.log(validPaths);
 
   return '';
 }
