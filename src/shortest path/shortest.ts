@@ -12,7 +12,7 @@
  *              |       |                        |           | 2         |
  *              - J-----3-----K----------8-------            M           |
  *                |           |                              |           |
- *                |           --------------10---------------            |
+ *                |           --------------6---------------            |
  *                ------------------------15------------------------------
  *
  *
@@ -20,30 +20,12 @@
  */
 
 type Path = Array<string | number>;
-type Data = Path[];
+export type Data = Path[];
 
-// an array of node connections with a distance value
-export const exampleData: Data = [
-  ['A', 'B', 3],
-  ['B', 'C', 3],
-  ['C', 'F', 3],
-  ['B', 'F', 7],
-  ['B', 'Z', 2],
-  ['Z', 'G', 3],
-  ['G', 'T', 3],
-  ['Z', 'H', 3],
-  ['A', 'D', 1],
-  ['D', 'E', 2],
-  ['E', 'J', 3],
-  ['H', 'J', 3],
-  ['H', 'K', 3],
-  ['K', 'G', 8],
-  ['K', 'M', 2],
-  ['T', 'J', 15],
-  ['T', 'M', 2],
-  ['F', 'T', 2],
-  ['D', 'H', 1],
-];
+interface PathResult {
+  path: Path;
+  distance: number;
+}
 
 export function shortestPath(data: Data, from: string, to: string): string {
   // given a node, get all connections
@@ -69,8 +51,8 @@ export function shortestPath(data: Data, from: string, to: string): string {
   function getDistanceBetweenTwoNodes(
     node1: string | number,
     node2: string | number
-  ): number | null {
-    for (let conn in data) {
+  ): number {
+    for (const conn of data) {
       if (
         (conn[0] === node1 || conn[1] === node1) &&
         (conn[0] === node2 || conn[1] === node2)
@@ -78,7 +60,7 @@ export function shortestPath(data: Data, from: string, to: string): string {
         return conn[2] as number;
       }
     }
-    return null;
+    throw `Distance not found between ${node1} and ${node2}`;
   }
 
   function getTotalDistance(path: Array<string | number>): number {
@@ -91,27 +73,34 @@ export function shortestPath(data: Data, from: string, to: string): string {
       }
       distance += getDistanceBetweenTwoNodes(node1, node2) ?? 0;
     }
-
     return distance;
   }
 
-  const paths: Array<Array<string | number>> = [];
+  const paths: Array<PathResult> = [];
   function traverseAllPaths(
     node: string,
     to: string,
     visitedNodes: Array<string | number> = []
   ): void {
-    visitedNodes.push(node);
-    if (node === to) {
-      return;
-    }
+    if (!visitedNodes.includes(node)) visitedNodes.push(node);
+
     const nodePaths = getNodePaths(node);
     for (let i = 0; i < nodePaths.length; i++) {
       const newNode = nodePaths[i][1] as string;
       if (!visitedNodes.includes(newNode)) {
-        const newVisited = [...visitedNodes, getTotalDistance(visitedNodes)];
-        paths.push(newVisited);
-        traverseAllPaths(newNode, to, newVisited);
+        const newVisited = [...visitedNodes];
+        newVisited.push(newNode);
+        const totalDistance = getTotalDistance(newVisited);
+        const pathResult = {
+          path: newVisited,
+          distance: totalDistance,
+        };
+        if (newVisited.length > 1) {
+          paths.push(pathResult);
+        }
+        if (node !== to) {
+          traverseAllPaths(newNode, to, newVisited);
+        }
       }
     }
     return;
@@ -119,12 +108,26 @@ export function shortestPath(data: Data, from: string, to: string): string {
 
   traverseAllPaths(from, to);
 
+  // filter all the valid paths
   const validPaths = paths.filter((path, index, array) => {
-    const lastIndex = path.length - 1;
-    return path[lastIndex - 1] === to;
+    const lastIndex = path.path.length - 1;
+    return path.path[lastIndex] === to;
   });
 
-  console.log(validPaths);
+  // get the shortest distance path
+  const orderedPaths = validPaths.sort((a, b) => {
+    return a.distance - b.distance;
+  });
 
-  return '';
+  const fastestPath = orderedPaths[0];
+  // form the result
+  let result: string = '';
+  fastestPath.path.forEach((node, i) => {
+    result += `${node}`;
+    if (i < fastestPath.path.length - 1) {
+      result += '->';
+    }
+  });
+
+  return result;
 }
