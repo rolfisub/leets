@@ -6,3 +6,8 @@ export class ListNode {
     this.next = next === undefined ? null : next;
   }
 }
+
+export interface ResultSteps<T = any> {
+  result: T;
+  steps: number;
+}
