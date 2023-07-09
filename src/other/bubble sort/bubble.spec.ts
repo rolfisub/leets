@@ -35,4 +35,14 @@ describe('bubble sort', () => {
     expect(result.result.length).toEqual(size);
     expect(result.steps).toBeGreaterThan((size * size) / 2);
   });
+  it('best case scenario O(N)', () => {
+    const input = [1, 2, 3];
+    const result = bubbleSort(input);
+    expect(result.steps).toEqual(input.length);
+  });
+  it('worse case scenario O(N^2)', () => {
+    const input = [3, 2, 1];
+    const result = bubbleSort(input);
+    expect(result.steps).toEqual(input.length * input.length);
+  });
 });
