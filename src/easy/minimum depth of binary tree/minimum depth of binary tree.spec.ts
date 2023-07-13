@@ -1,4 +1,7 @@
-import { generateBinaryTreeFromArray } from '../../common/utils';
+import {
+  generateArrayWithRandomIntegers,
+  generateBinaryTreeFromArray,
+} from '../../common/utils';
 import { minDepth } from './minimum depth of binary tree';
 import { TreeNode } from '../../common/types';
 
@@ -21,6 +24,17 @@ describe('min depth of binary tree', () => {
     const inputArray: Array<number | null> = [];
     const inputNode = generateBinaryTreeFromArray(inputArray);
     const expected = 0;
+    const result = minDepth(inputNode);
+    expect(result).toEqual(expected);
+  });
+  it('case 4', () => {
+    const inputArray: Array<number | null> = generateArrayWithRandomIntegers(
+      3001,
+      -100,
+      100
+    );
+    const inputNode = generateBinaryTreeFromArray(inputArray);
+    const expected = 11;
     const result = minDepth(inputNode);
     expect(result).toEqual(expected);
   });
