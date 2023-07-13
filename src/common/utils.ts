@@ -1,4 +1,4 @@
-import { ListNode } from './types';
+import { ListNode, TreeNode } from './types';
 
 export function getRandomInteger(min: number, max: number): number {
   // Calculate the range of numbers
@@ -38,4 +38,10 @@ export function generateArrayWithRandomIntegers(
     result.sort((a, b) => a - b);
   }
   return result;
+}
+
+export function generateBinaryTreeFromArray(
+  array: Array<number | null>
+): TreeNode | null {
+  return null;
 }
