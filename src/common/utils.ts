@@ -40,8 +40,50 @@ export function generateArrayWithRandomIntegers(
   return result;
 }
 
+/**
+ * Expects an array fo the following shape:
+ * const example = [
+ *      0, // 1 - 1
+ *      1,2, // 2 - 2
+ *      3,4,5,6, // 3 - 4
+ *      7,8,9,10,7,8,9,10, // 4 - 8
+ *      7,8,9,10,7,8,9,10,7,8,9,10,7,8,9,10, // 5 - 16
+ *      7,8,9,10,7,8,9,10,7,8,9,10,7,8,9,10, 7,8,9,10,7,8,9,10,7,8,9,10,7,8,9,10, // 6 - 32
+ * ];
+ * @param queue
+ */
 export function generateBinaryTreeFromArray(
-  array: Array<number | null>
+  queue: Array<number | null>
 ): TreeNode | null {
-  return null;
+  if (!queue.length) return null;
+  if (queue.length > 1) {
+    const isEven = (queue.length - 1) % 2 === 0;
+    if (!isEven) {
+      throw Error(
+        'array provided is does not contain an even amount of numbers'
+      );
+    }
+  }
+  function processNode(parentNodes: Array<TreeNode | null>): TreeNode | null {
+    if (!parentNodes.length) return null;
+    const newParentNodes = [];
+    for (const node of parentNodes) {
+      if (node) {
+        if (queue.length > 0) {
+          const valLeft = queue.shift();
+          node.left = valLeft === null ? null : new TreeNode(valLeft);
+          newParentNodes.push(node.left);
+        }
+        if (queue.length > 0) {
+          const valRight = queue.shift();
+          node.right = valRight === null ? null : new TreeNode(valRight);
+          newParentNodes.push(node.right);
+        }
+      }
+    }
+    processNode(newParentNodes);
+    return parentNodes[0];
+  }
+
+  return processNode([new TreeNode(queue.shift() as number)]);
 }
