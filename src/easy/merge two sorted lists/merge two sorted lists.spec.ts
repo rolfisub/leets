@@ -27,9 +27,26 @@ describe('merge two sorted lists', () => {
     expect(result).toEqual(expected);
   });
   it('case 4', () => {
+    const input1 = generateLinkedListFromArray([1]);
+    const input2 = generateLinkedListFromArray([2]);
+    const result = mergeTwoLists(input1, input2);
+    const expected = generateLinkedListFromArray([1, 2]);
+    expect(result).toEqual(expected);
+  });
+  it('case 5', () => {
     const array1 = generateArrayWithRandomIntegers(10, 0, 100, true);
     const input1 = generateLinkedListFromArray(array1);
     const array2 = generateArrayWithRandomIntegers(10, 0, 100, true);
+    const input2 = generateLinkedListFromArray(array2);
+    const resultArray = array1.concat(...array2).sort((a, b) => a - b);
+    const expected = generateLinkedListFromArray(resultArray);
+    const result = mergeTwoLists(input1, input2);
+    expect(result).toEqual(expected);
+  });
+  it('case 6', () => {
+    const array1 = generateArrayWithRandomIntegers(10, -100, 100, true);
+    const input1 = generateLinkedListFromArray(array1);
+    const array2 = generateArrayWithRandomIntegers(10, -100, 100, true);
     const input2 = generateLinkedListFromArray(array2);
     const resultArray = array1.concat(...array2).sort((a, b) => a - b);
     const expected = generateLinkedListFromArray(resultArray);
