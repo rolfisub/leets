@@ -6,18 +6,22 @@ import { TreeNode } from '../../common/types';
 
 export function minDepth(root: TreeNode | null): number {
   if (!root) return 0;
-  const leavesLevels: number[] = [];
+  let currentMinLevel: number = 9999999999999999;
   function processNode(node: TreeNode | null, level = 1): void {
     if (!node) return;
     const isLeave = !node.left && !node.right;
     if (isLeave) {
-      leavesLevels.push(level);
+      if (currentMinLevel > level) {
+        currentMinLevel = level;
+      }
     } else {
-      processNode(node.left, level + 1);
-      processNode(node.right, level + 1);
+      if (level + 1 < currentMinLevel) {
+        processNode(node.left, level + 1);
+        processNode(node.right, level + 1);
+      }
     }
   }
   processNode(root);
 
-  return leavesLevels.sort((a, b) => a - b)[0];
+  return currentMinLevel;
 }
