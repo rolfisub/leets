@@ -6,7 +6,7 @@ import { TreeNode } from '../../common/types';
 
 export function minDepth(root: TreeNode | null): number {
   if (!root) return 0;
-  let currentMinLevel: number = 9999999999999999;
+  let currentMinLevel: number = Infinity;
   function processNode(node: TreeNode | null, level = 1): void {
     if (!node) return;
     const isLeave = !node.left && !node.right;
