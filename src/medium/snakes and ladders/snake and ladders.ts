@@ -20,7 +20,7 @@ export function snakesAndLadders(board: number[][]): number {
   };
   // how to iterate on a boustrophedon way
   let xDirection = -1;
-  let yDirection = (row: number, size: number = board.length): number => {
+  let yDirection = (row: number): number => {
     // alternates between +1 and -1 depending on the row
     let dir = -1;
     for (let i = size - 1; i >= 0; i--) {
@@ -34,19 +34,6 @@ export function snakesAndLadders(board: number[][]): number {
     }
     throw 'row not found';
   };
-
-  // get max dice value for a current position
-  function getMaxDiceValue({ x, y }: Position): number {
-    const max = 6;
-    for (let i = max; i > 0; i--) {
-      const testY = y + i * yDirection(x);
-      const isFree = board[x][testY] === -1;
-      if (isFree) {
-        return i;
-      }
-    }
-    return -1;
-  }
 
   // creates a move object
   function createMove(curr: Position, steps: number): Move {
@@ -91,6 +78,30 @@ export function snakesAndLadders(board: number[][]): number {
       steps,
     };
   }
+  // get max dice value for a current position
+  function getMaxDiceMove({ x, y }: Position): Move | null {
+    const max = 6;
+    for (let i = max; i > 0; i--) {
+      const move = createMove({ x, y }, i);
+      if (board[move.new.x][move.new.y] === -1) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  // get all ladder and snake moves from a certain position
+  function getSnakeMoves(curr: Position): Move[] {
+    const result: Move[] = [];
+    const maxDiceVal = 6;
+    for (let i = 1; i <= maxDiceVal; i++) {
+      result.push(createMove(curr, i));
+    }
+    return result.filter((move, index, arr) => {
+      const val = board[move.new.x][move.new.y];
+      return val !== -1;
+    });
+  }
 
   // amount or moves needs to be between 1 and 6 or less if boars is smaller
   function getAllAvailableMoves(curr: Position): Move[] {
@@ -103,12 +114,15 @@ export function snakesAndLadders(board: number[][]): number {
 
     const allMoves: Move[] = [];
 
-    const maxDiceVal = getMaxDiceValue(curr);
-    if (maxDiceVal !== -1) {
-      allMoves.push(createMove(curr, maxDiceVal));
+    const maxDiceVal = getMaxDiceMove(curr);
+    if (maxDiceVal) {
+      allMoves.push(maxDiceVal);
     }
 
-    // TODO: get all the other alternatives
+    const snakeMoves: Move[] = getSnakeMoves(curr);
+    snakeMoves.forEach((m) => {
+      allMoves.push(m);
+    });
 
     return allMoves;
   }
