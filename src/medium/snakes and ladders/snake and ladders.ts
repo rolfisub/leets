@@ -14,7 +14,7 @@ interface Move {
 export function snakesAndLadders(board: number[][]): number {
   // what is the bottom left?
   const size = board.length;
-  const bottomLeft = {
+  const startPosition = {
     x: size - 1,
     y: 0,
   };
@@ -33,6 +33,11 @@ export function snakesAndLadders(board: number[][]): number {
       if (row === i) return dir;
     }
     throw 'row not found';
+  };
+
+  const finalPosition: Position = {
+    x: 0,
+    y: yDirection(0) === -1 ? 0 : size - 1,
   };
 
   // creates a move object
@@ -104,7 +109,7 @@ export function snakesAndLadders(board: number[][]): number {
   }
 
   // amount or moves needs to be between 1 and 6 or less if boars is smaller
-  function getAllAvailableMoves(curr: Position): Move[] {
+  function getAllAvailableMovesFromPosition(curr: Position): Move[] {
     /**
      * Possible Paths:
      * - get max dice available value (no ladder = -1)
@@ -127,11 +132,37 @@ export function snakesAndLadders(board: number[][]): number {
     return allMoves;
   }
 
-  // we cannot brute force it, the algorithm needs to find the quickest way to win,
-  // with the optimal options all taken in consideration
+  /**
+   * return the least amount of moves needed to beat the game
+   */
+  0;
 
-  // if value in board is not -1, we have a snake or a ladder, the value is the
-  // square on which you must move if you land on it
-  // return the least amount of moves needed to beat the game
-  return 0;
+  // get all the possible moves in to this array
+  function getAllPossiblePaths(_startPos: Position): Array<Move[]> {
+    //TODO: recursively push all possible paths to an array from an starting position
+  }
+  const allPaths: Array<Move[]> = getAllPossiblePaths(startPosition);
+
+  function isEqualPos(pos1: Position, pos2: Position): boolean {
+    return pos1.x === pos2.x && pos1.y === pos2.y;
+  }
+
+  // filter all the moves that reach the end of the board
+  const allEndingPaths: Array<Move[]> = allPaths.filter((path) => {
+    const lastMove = path[path.length - 1];
+    return isEqualPos(lastMove.new, finalPosition);
+  });
+
+  // check if we have a result
+  if (allEndingPaths.length < 1) {
+    throw 'No path found';
+  }
+
+  // sort by length
+  const sortedResult: Array<Move[]> = allEndingPaths.sort((a, b) => {
+    return a.length - b.length;
+  });
+
+  // return the smallest length
+  return sortedResult[0].length;
 }
