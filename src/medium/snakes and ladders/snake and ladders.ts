@@ -11,10 +11,12 @@ interface Move {
   yDir?: number;
 }
 
+type Path = Move[];
+
 export function snakesAndLadders(board: number[][]): number {
   // what is the bottom left?
   const size = board.length;
-  const bottomLeft = {
+  const bottomLeft: Position = {
     x: size - 1,
     y: 0,
   };
@@ -32,7 +34,7 @@ export function snakesAndLadders(board: number[][]): number {
       }
       if (row === i) return dir;
     }
-    throw 'row not found';
+    throw 'row not found: ' + row;
   };
 
   // creates a move object
@@ -41,6 +43,7 @@ export function snakesAndLadders(board: number[][]): number {
       let currX = curr.x;
       let currY = curr.y;
       for (let s = 0; s < steps; s++) {
+        console.log(currX);
         let yDir = yDirection(currX);
         // are we on the last square of the row?
         let isLastSquare: boolean = false;
@@ -104,7 +107,7 @@ export function snakesAndLadders(board: number[][]): number {
   }
 
   // amount or moves needs to be between 1 and 6 or less if boars is smaller
-  function getAllAvailableMoves(curr: Position): Move[] {
+  function getAllAvailableMovesFromPosition(curr: Position): Move[] {
     /**
      * Possible Paths:
      * - get max dice available value (no ladder = -1)
@@ -127,11 +130,30 @@ export function snakesAndLadders(board: number[][]): number {
     return allMoves;
   }
 
-  // we cannot brute force it, the algorithm needs to find the quickest way to win,
-  // with the optimal options all taken in consideration
+  const paths: Path[] = [];
+  function traversePath(curr: Position, previousPath: Path) {
+    const moves = getAllAvailableMovesFromPosition(curr);
+    moves.forEach((move) => {
+      const path = [...previousPath, move];
+      paths.push(path);
+      traversePath(move.new, path);
+    });
+  }
 
+  traversePath(bottomLeft, []);
+
+  // paths should contain all moves
+  // filter out paths that dont reach the end
+  const endPosition: Position = { x: 0, y: 0 };
+
+  const pathsWithEnd: Path[] = paths.filter((path) => {
+    return path[path.length - 1].new === endPosition;
+  });
+  console.log('pathsWithEnd', pathsWithEnd);
   // if value in board is not -1, we have a snake or a ladder, the value is the
   // square on which you must move if you land on it
   // return the least amount of moves needed to beat the game
   return 0;
 }
+
+snakesAndLadders();
