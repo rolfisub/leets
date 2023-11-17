@@ -28,10 +28,10 @@ public class Solution {
     }
 
 
-    public static int climbStairs(int n) { 
+    public static int climbStairs(int n) throws Exception { 
         int boardSize = n;
         if (boardSize > 45) {
-            throw new Error("nope");
+            throw new Exception("nope");
         }
         ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
         int pos = 0;
