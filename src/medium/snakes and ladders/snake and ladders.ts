@@ -11,6 +11,8 @@ interface Move {
   yDir?: number;
 }
 
+type Path = Move[];
+
 export function snakesAndLadders(board: number[][]): number {
   // what is the bottom left?
   const size = board.length;
@@ -32,7 +34,7 @@ export function snakesAndLadders(board: number[][]): number {
       }
       if (row === i) return dir;
     }
-    throw 'row not found';
+    throw 'row not found: ' + row;
   };
 
   const finalPosition: Position = {
@@ -46,6 +48,7 @@ export function snakesAndLadders(board: number[][]): number {
       let currX = curr.x;
       let currY = curr.y;
       for (let s = 0; s < steps; s++) {
+        console.log(currX);
         let yDir = yDirection(currX);
         // are we on the last square of the row?
         let isLastSquare: boolean = false;
@@ -140,7 +143,9 @@ export function snakesAndLadders(board: number[][]): number {
   // get all the possible moves in to this array
   function getAllPossiblePaths(_startPos: Position): Array<Move[]> {
     //TODO: recursively push all possible paths to an array from an starting position
+    return [];
   }
+  
   const allPaths: Array<Move[]> = getAllPossiblePaths(startPosition);
 
   function isEqualPos(pos1: Position, pos2: Position): boolean {
@@ -166,3 +171,5 @@ export function snakesAndLadders(board: number[][]): number {
   // return the smallest length
   return sortedResult[0].length;
 }
+
+// snakesAndLadders();
