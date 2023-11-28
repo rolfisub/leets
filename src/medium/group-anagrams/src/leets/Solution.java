@@ -2,13 +2,13 @@ package leets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String,ArrayList<String>> mapResult = new HashMap<String,ArrayList<String>>(0);
+        Map<String,ArrayList<String>> mapResult = new LinkedHashMap<String,ArrayList<String>>(0);
 
         for (String str : strs) {
             String hash = this.getAnagramHash(str);
